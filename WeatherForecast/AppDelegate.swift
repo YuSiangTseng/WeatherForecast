@@ -7,15 +7,18 @@
 //
 
 import UIKit
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let navigationController = window?.rootViewController as? UINavigationController
+        let weatherTableViewController = navigationController?.topViewController as? WeatherTableViewController
+        weatherTableViewController?.weatherAPI = WeatherAPI()
         return true
     }
 
