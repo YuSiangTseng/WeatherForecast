@@ -71,7 +71,7 @@ class WeatherAPI {
     
     private func weatherWithArray(cityJson: [String : AnyObject], weatherJson: [String: AnyObject]) -> Weather? {
         guard let cityName = cityJson["name"] as? String,
-            let date = weatherJson["dt"] as? Int64,
+            let date = weatherJson["dt"] as? Double,
             let temp = weatherJson["temp"] as? [String : AnyObject],
             let degree = temp["day"] as? Double,
             let weatherInformationJson = weatherJson["weather"] as? [[String : AnyObject]] else {
@@ -79,13 +79,13 @@ class WeatherAPI {
         }
         var weatherType = String()
         var iconURL = String()
-        if let weatherTypeName = weatherInformationJson.first?["main"] as? String {
+        if let weatherTypeName = weatherInformationJson.first?["description"] as? String {
             if let iconID = weatherInformationJson.first?["icon"] as? String {
                 weatherType = weatherTypeName
                 iconURL = "http://openweathermap.org/img/w/" + iconID + ".png"
             }
         }
-        return Weather(cityName: cityName, date: String(date), degree: String(degree), weatherType: weatherType, iconURL: iconURL)
+        return Weather(cityName: cityName, date: date, degree: String(degree), weatherType: weatherType, iconURL: iconURL)
     }
     
 }

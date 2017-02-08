@@ -19,6 +19,12 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     let locationManager = CLLocationManager()
     var latitude = "51.509865"
     var longitude = "-0.118092"
+    var dataSource: TableViewDataSource?
+    var weatherStore: WeatherStore? {
+        didSet {
+            setUpTableView(weatherStore: weatherStore!)
+        }
+    }
     
     func loadCurrentLocation() {
         locationManager.delegate = self
@@ -35,7 +41,7 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
             (weatherResult) -> Void in
             switch weatherResult {
             case let .Success(weathers):
-                print(weathers)
+                self.weatherStore = WeatherStore(allWeathers: weathers)
             case .Failure(_):
                 print("hello")
             }
@@ -51,6 +57,14 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+    
+    func setUpTableView(weatherStore: WeatherStore) {
+        tableView.rowHeight = 75
+        dataSource = TableViewDataSource(weatherStore: weatherStore)
+        tableView.dataSource = dataSource
+        navigationItem.title = weatherStore.allWeathers[0].cityName
+        
     }
 
 }
