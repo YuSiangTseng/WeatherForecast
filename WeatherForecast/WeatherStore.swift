@@ -18,6 +18,7 @@ enum IconError: Error {
 }
 
 class WeatherStore {
+    
     private (set) var allWeathers: [Weather]
     
     init(allWeathers: [Weather]) {
@@ -25,15 +26,16 @@ class WeatherStore {
     }
     
     func fetchIconImage(weather: Weather, completion: @escaping (IconResult) -> Void) {
+        guard weather.weatherIcon == nil else {
+            completion(.Success(weather.weatherIcon!))
+            return
+        }
         guard let url = URL(string: weather.iconURL) else {
+            completion(.Failure(IconError.IconCreationError))
             return
         }
-        if let icon = weather.weatherIcon {
-            completion(.Success(icon))
-            return
-        }
-        let session = URLSession.shared
-        session.dataTask(with: url) { (data, response, error) in
+        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             OperationQueue.main.addOperation({
                 let result = self.processIconWithData(data: data)
                 if case let .Success(icon) = result {
@@ -41,14 +43,13 @@ class WeatherStore {
                 }
                 completion(result)
             })
-            }.resume()
+        }.resume()
 
     }
     
     private func processIconWithData(data: Data?) -> IconResult {
-        guard data != nil,
-            let image = UIImage(data: data!) else {
-                return .Failure(IconError.IconCreationError)
+        guard data != nil, let image = UIImage(data: data!) else {
+            return .Failure(IconError.IconCreationError)
         }
         
         return .Success(image)

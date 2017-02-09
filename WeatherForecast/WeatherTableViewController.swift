@@ -14,13 +14,7 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     let locationManager = CLLocationManager()
     var weatherAPI: WeatherAPI! {
         didSet {
-            if CLLocationManager.locationServicesEnabled() {
-                locationManager.delegate = self
-                locationManager.requestAlwaysAuthorization()
-                locationManager.requestWhenInUseAuthorization()
-                locationManager.startUpdatingLocation()
-                locationManager.distanceFilter = 300
-            }
+            requestLocation()
         }
     }
     var latitude = "51.509865"
@@ -28,7 +22,9 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     var dataSource: TableViewDataSource?
     var weatherStore: WeatherStore? {
         didSet {
-            setUpTableView(weatherStore: weatherStore!)
+            if let weatherStore = weatherStore {
+                setUpTableView(weatherStore: weatherStore)
+            }
         }
     }
     var dateFormatter = DateFormatter()
@@ -37,8 +33,6 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.layoutIfNeeded()
-        refreshControl?.layoutIfNeeded()
         refreshControl?.beginRefreshing()
     }
     
@@ -57,6 +51,19 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         tableView.dataSource = dataSource
         navigationItem.title = weatherStore.allWeathers[0].cityName
         
+    }
+    
+    func requestLocation() {
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+            locationManager.distanceFilter = 300
+        }
+        else {
+            loadData()
+        }
     }
     
     //MARK:- CLLocationManagerDelegate
@@ -81,8 +88,7 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     
     func loadData() {
         weatherAPI.setCoordinates(lat: latitude, long: longitude)
-        weatherAPI.fetchWeathers() {
-            (weatherResult) -> Void in
+        weatherAPI.fetchWeathers { weatherResult in
             switch weatherResult {
             case let .Success(weathers):
                 self.weatherStore = WeatherStore(allWeathers: weathers)

@@ -9,12 +9,14 @@
 import UIKit
 
 class Weather {
+    
     let cityName: String
     let date: Double
     let degree: String
     let weatherType: String
     let iconURL: String
     var weatherIcon: UIImage?
+    
     init(cityName: String, date: Double, degree: String, weatherType: String, iconURL: String) {
         self.cityName = cityName
         self.date = date
@@ -22,5 +24,6 @@ class Weather {
         self.weatherType = weatherType
         self.iconURL = iconURL
     }
+    
 }
 

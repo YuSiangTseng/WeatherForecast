@@ -13,6 +13,7 @@ class TableViewDataSource: NSObject, UITableViewDataSource {
     
     var weatherStore: WeatherStore
     var dateFormatter = DateFormatter()
+    
     init(weatherStore: WeatherStore) {
         self.weatherStore = weatherStore
         dateFormatter.dateStyle = .short
