@@ -18,7 +18,7 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
                 locationManager.delegate = self
                 locationManager.requestAlwaysAuthorization()
                 locationManager.requestWhenInUseAuthorization()
-                locationManager.requestLocation()
+                locationManager.startUpdatingLocation()
                 locationManager.distanceFilter = 300
             }
         }
