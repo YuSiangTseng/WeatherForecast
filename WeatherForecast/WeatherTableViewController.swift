@@ -29,19 +29,32 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
             setUpTableView(weatherStore: weatherStore!)
         }
     }
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
     
-    func loadData() {
-        weatherAPI.setCoordinates(lat: latitude, long: longitude)
-        weatherAPI.fetchWeathers() {
-            (weatherResult) -> Void in
-            switch weatherResult {
-            case let .Success(weathers):
-                self.weatherStore = WeatherStore(allWeathers: weathers)
-            case .Failure(_):
-                print("hello")
-            }
-        }
+    //MARK:- life cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.layoutIfNeeded()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
+        activityIndicator.startAnimating()
+        //refreshControl?.layoutIfNeeded()
+        refreshControl?.beginRefreshing()
     }
+    
+    //MARK:- view set up
+    
+    func setUpTableView(weatherStore: WeatherStore) {
+        tableView.rowHeight = 75
+        activityIndicator.stopAnimating()
+        refreshControl?.endRefreshing()
+        dataSource = TableViewDataSource(weatherStore: weatherStore)
+        tableView.dataSource = dataSource
+        navigationItem.title = weatherStore.allWeathers[0].cityName
+        
+    }
+    
+    //MARK:- CLLocationManagerDelegate
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations[0]
@@ -61,17 +74,24 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         
     }
     
+    func loadData() {
+        weatherAPI.setCoordinates(lat: latitude, long: longitude)
+        weatherAPI.fetchWeathers() {
+            (weatherResult) -> Void in
+            switch weatherResult {
+            case let .Success(weathers):
+                self.weatherStore = WeatherStore(allWeathers: weathers)
+            case .Failure(_):
+                self.showErrorMessage()
+            }
+        }
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }
     
-    func setUpTableView(weatherStore: WeatherStore) {
-        tableView.rowHeight = 75
-        dataSource = TableViewDataSource(weatherStore: weatherStore)
-        tableView.dataSource = dataSource
-        navigationItem.title = weatherStore.allWeathers[0].cityName
-        
-    }
+    //MARK:- TableViewDelegate
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let weather = weatherStore?.allWeathers[indexPath.row] {
@@ -81,5 +101,34 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
             })
         }
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let weather = weatherStore?.allWeathers[indexPath.row] {
+            let objects = [weather.cityName, weather.degree, weather.weatherType, weather.weatherIcon!] as [Any]
+            let activityViewController = UIActivityViewController(activityItems: objects, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = tableView
+            self.present(activityViewController, animated: true, completion: nil)
+        }
+    }
+    
+    //MARK:- SrollviewDelegate
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        refreshControl = nil
+    }
+    
+    //MARK:- Utility
+    
+    func showErrorMessage() {
+        let title = "Internet problem"
+        let message = "Please press reload to try it again."
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let reloadAction = UIAlertAction(title: "Reload", style: .default) { (action) -> Void in
+            self.loadData()
+        }
+        ac.addAction(reloadAction)
+        present(ac, animated: true, completion: nil)
+    }
+
 
 }
