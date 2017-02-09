@@ -46,7 +46,7 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     
     func setUpTableView(weatherStore: WeatherStore) {
         tableView.rowHeight = 75
-        activityIndicator.stopAnimating()
+//        activityIndicator.stopAnimating()
         refreshControl?.endRefreshing()
         dataSource = TableViewDataSource(weatherStore: weatherStore)
         tableView.dataSource = dataSource
@@ -60,6 +60,8 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         let location = locations[0]
         latitude = "\(location.coordinate.latitude)"
         longitude = "\(location.coordinate.longitude)"
+        locationManager.stopUpdatingLocation()
+        print("aaa")
         loadData()
     }
     
