@@ -15,7 +15,7 @@
             <objects>
                 <tableViewController id="wwS-c7-FoM" customClass="WeatherTableViewController" customModule="WeatherForecast" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="P8v-we-1qb">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -27,27 +27,27 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LKx-NX-zfQ">
-                                            <rect key="frame" x="8" y="7.5" width="60" height="60"/>
+                                            <rect key="frame" x="16" y="7.5" width="60" height="60"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="60" id="RWU-mh-miA"/>
                                                 <constraint firstAttribute="width" constant="60" id="ftQ-gp-NJS"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather Type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="slb-bm-De8">
-                                            <rect key="frame" x="98" y="10" width="107" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <rect key="frame" x="106" y="10" width="103" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Degree" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fAj-6O-DYp">
-                                            <rect key="frame" x="98" y="43.5" width="56" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <rect key="frame" x="106" y="44.5" width="54.5" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1Y-nt-thg">
-                                            <rect key="frame" x="320" y="46.5" width="36" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1Y-nt-thg">
+                                            <rect key="frame" x="320" y="39.5" width="36" height="28"/>
+                                            <fontDescription key="fontDescription" name="Kailasa" family="Kailasa" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -58,7 +58,7 @@
                                         <constraint firstAttribute="bottom" secondItem="f1Y-nt-thg" secondAttribute="bottom" constant="7" id="acd-V5-Txe"/>
                                         <constraint firstAttribute="bottom" secondItem="fAj-6O-DYp" secondAttribute="bottom" constant="10" id="dxA-IZ-o3h"/>
                                         <constraint firstItem="slb-bm-De8" firstAttribute="top" secondItem="Q49-GE-SXg" secondAttribute="top" constant="10" id="edN-Cu-ejK"/>
-                                        <constraint firstAttribute="leadingMargin" secondItem="LKx-NX-zfQ" secondAttribute="leading" id="gWA-jv-mkY"/>
+                                        <constraint firstAttribute="leadingMargin" secondItem="LKx-NX-zfQ" secondAttribute="leading" constant="-8" id="gWA-jv-mkY"/>
                                         <constraint firstItem="fAj-6O-DYp" firstAttribute="leading" secondItem="LKx-NX-zfQ" secondAttribute="trailing" constant="30" id="wBG-zY-Ci8"/>
                                         <constraint firstItem="LKx-NX-zfQ" firstAttribute="centerY" secondItem="Q49-GE-SXg" secondAttribute="centerY" id="x9d-PE-VnP"/>
                                     </constraints>
@@ -76,9 +76,11 @@
                             <outlet property="delegate" destination="wwS-c7-FoM" id="ETt-VV-KMr"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="eWH-Uw-jMN"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="KI2-fu-fkH">
                         <autoresizingMask key="autoresizingMask"/>
+                        <attributedString key="attributedTitle"/>
                     </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7rG-AQ-asW" userLabel="First Responder" sceneMemberID="firstResponder"/>

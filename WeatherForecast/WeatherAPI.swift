@@ -34,7 +34,7 @@ class WeatherAPI {
             longitude != "" else {
                 return nil
         }
-        baseURLString = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=10&mode=json&units=metric&appid=f9c4a2dfc491a99982b4a2d8888b8937"
+        baseURLString = "http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + latitude + "&lon=" + longitude + "&cnt=16&mode=json&units=metric&appid=f9c4a2dfc491a99982b4a2d8888b8937"
         
         return URL(string: baseURLString)
     }

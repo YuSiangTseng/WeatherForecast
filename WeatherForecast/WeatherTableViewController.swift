@@ -18,6 +18,8 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
                 locationManager.delegate = self
                 locationManager.requestAlwaysAuthorization()
                 locationManager.requestWhenInUseAuthorization()
+                locationManager.requestLocation()
+                locationManager.distanceFilter = 300
             }
         }
     }
@@ -29,24 +31,27 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
             setUpTableView(weatherStore: weatherStore!)
         }
     }
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+    var dateFormatter = DateFormatter()
     
     //MARK:- life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.layoutIfNeeded()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: activityIndicator)
-        activityIndicator.startAnimating()
-        //refreshControl?.layoutIfNeeded()
+        refreshControl?.layoutIfNeeded()
         refreshControl?.beginRefreshing()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
     }
     
     //MARK:- view set up
     
     func setUpTableView(weatherStore: WeatherStore) {
         tableView.rowHeight = 75
-//        activityIndicator.stopAnimating()
         refreshControl?.endRefreshing()
         dataSource = TableViewDataSource(weatherStore: weatherStore)
         tableView.dataSource = dataSource
@@ -60,8 +65,6 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         let location = locations[0]
         latitude = "\(location.coordinate.latitude)"
         longitude = "\(location.coordinate.longitude)"
-        locationManager.stopUpdatingLocation()
-        print("aaa")
         loadData()
     }
     
@@ -106,10 +109,15 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let weather = weatherStore?.allWeathers[indexPath.row] {
-            let objects = [weather.cityName, weather.degree, weather.weatherType, weather.weatherIcon!] as [Any]
-            let activityViewController = UIActivityViewController(activityItems: objects, applicationActivities: nil)
-            activityViewController.popoverPresentationController?.sourceView = tableView
-            self.present(activityViewController, animated: true, completion: nil)
+            if let weatherIcon = weather.weatherIcon {
+                dateFormatter.dateStyle = .short
+                dateFormatter.dateFormat = "dd-MM-yyyy"
+                let objects = [weather.cityName, weather.degree + " ℃", weather.weatherType.capitalized, weatherIcon, dateFormatter.string(from: Date(timeIntervalSince1970: weather.date))] as [Any]
+                let activityViewController = UIActivityViewController(activityItems: objects, applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = tableView
+                self.present(activityViewController, animated: true, completion: nil)
+            }
+            
         }
     }
     
