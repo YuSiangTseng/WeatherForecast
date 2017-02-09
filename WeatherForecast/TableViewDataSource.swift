@@ -23,8 +23,8 @@ class TableViewDataSource: NSObject, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailTableViewCell") as! WeatherDetailTableViewCell
         let weather = weatherStore.allWeathers[indexPath.row]
         cell.weatherDateLabel.text = dateFormatter.string(from: Date(timeIntervalSince1970: weather.date))
-        cell.weatherDegreeLabel.text = weather.degree
-        cell.weatherTypeLabel.text = weather.weatherType
+        cell.weatherDegreeLabel.text = weather.degree + " ℃"
+        cell.weatherTypeLabel.text = weather.weatherType.capitalized
         cell.updateIcon(image: nil)
         
         return cell

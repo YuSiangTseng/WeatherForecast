@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct Weather {
+class Weather {
     let cityName: String
     let date: Double
     let degree: String

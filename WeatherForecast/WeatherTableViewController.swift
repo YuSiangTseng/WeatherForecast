@@ -11,12 +11,16 @@ import CoreLocation
 
 class WeatherTableViewController: UITableViewController, CLLocationManagerDelegate {
     
+    let locationManager = CLLocationManager()
     var weatherAPI: WeatherAPI! {
         didSet {
-            loadCurrentLocation()
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.requestAlwaysAuthorization()
+                locationManager.requestWhenInUseAuthorization()
+            }
         }
     }
-    let locationManager = CLLocationManager()
     var latitude = "51.509865"
     var longitude = "-0.118092"
     var dataSource: TableViewDataSource?
@@ -24,15 +28,6 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         didSet {
             setUpTableView(weatherStore: weatherStore!)
         }
-    }
-    
-    func loadCurrentLocation() {
-        locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestLocation()
-        //locationManager.startUpdatingLocation()
     }
     
     func loadData() {
@@ -55,6 +50,17 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         loadData()
     }
     
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .denied {
+            loadData()
+        }
+        else if status == .authorizedWhenInUse {
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestLocation()
+        }
+        
+    }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }
@@ -65,6 +71,15 @@ class WeatherTableViewController: UITableViewController, CLLocationManagerDelega
         tableView.dataSource = dataSource
         navigationItem.title = weatherStore.allWeathers[0].cityName
         
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let weather = weatherStore?.allWeathers[indexPath.row] {
+            weatherStore?.fetchIconImage(weather: weather, completion: { (iconResult) in
+                let cell = cell as! WeatherDetailTableViewCell
+                cell.updateIcon(image: weather.weatherIcon)
+            })
+        }
     }
 
 }
